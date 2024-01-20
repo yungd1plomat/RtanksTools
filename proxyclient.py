@@ -3,6 +3,7 @@ from encryption import AesEncryption
 from queue import Queue
 import socket
 from threading import Thread
+import json
 
 class ProxyClient:
 
@@ -63,6 +64,7 @@ class ProxyClient:
             self.__crypt_manager.parse_key(aes_data)
             print("Succesfully handshaked!")
         except:
+            self.disconnect()
             raise Exception("Can't connect to server")
 
     def auth(self, login, password):
@@ -77,7 +79,35 @@ class ProxyClient:
         except:
             print("Invalid credentials!")
             return False
-        
+    
+    def get_user_info(self, nickname):
+        self.send_data(f"lobby;get_user_info;{nickname}")
+        try:
+            data = self.receive_data("lobby;update_user_info;")
+            user_info = data.split(';')[2]
+            return json.loads(user_info)
+        except:
+            print("Can't get user data")
+
+    def get_battles(self):
+        self.send_data("lobby;get_data_init_battle_select")
+        try:
+            data = self.receive_data("lobby;init_battle_select")
+            battles = data.split(';')[2]
+            return json.loads(battles)
+        except:
+            print("Can't get battles")
+    
+    def enter_battle(self, battle_id):
+        self.send_data(f"lobby;enter_battle;{battle_id};false")
+        self.send_data(f"lobby;enter_battle_team;{battle_id};true")
+        self.send_data(f"lobby;enter_battle_team;{battle_id};false")
+        try:
+            self.receive_data("lobby;start_battle")
+            return True
+        except:
+            return False
+
     def disconnect(self):
         self.__s.close()
         self.__disconnecting = True

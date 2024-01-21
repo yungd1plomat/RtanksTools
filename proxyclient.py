@@ -99,15 +99,31 @@ class ProxyClient:
             print("Can't get battles")
     
     def enter_battle(self, battle_id):
+        self.send_data("battle;i_exit_from_battle")
         self.send_data(f"lobby;enter_battle;{battle_id};false")
         self.send_data(f"lobby;enter_battle_team;{battle_id};true")
         self.send_data(f"lobby;enter_battle_team;{battle_id};false")
         try:
             self.receive_data("lobby;start_battle")
+            self.send_data("battle;get_init_data_local_tank")
             return True
         except:
             return False
 
+    def buy_item(self, item_id, count):
+        self.send_data(f"garage;try_buy_item;{item_id};{count}")
+
+    def change_password(self, old_password, new_password):
+        try:
+            self.send_data(f"lobby;change_password;{old_password};{new_password}")
+            self.receive_data("lobby;server_message;")
+            return True
+        except:
+            return False
+
+    def send_chat_message(self, message):
+        self.send_data(f"battle;chat;{message};false")
+        
     def disconnect(self):
         self.__s.close()
         self.__disconnecting = True

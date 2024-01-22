@@ -56,6 +56,7 @@ if __name__ == '__main__':
                 utils.write_file("data/proccessed.txt", f"{login}:{password}\n", True)
                 print(f"Processed account {login}")
             else:
+                utils.write_file("data/online.txt", f"{login}:{password}\n", True)
                 print(f"Account {login} is online or invalid credentials")
         except:
             utils.write_file("data/errors.txt", f"{login}:{password}\n", True)

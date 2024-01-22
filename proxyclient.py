@@ -74,11 +74,12 @@ class ProxyClient:
         try:
             self.receive_data("auth;accept")
             self.send_data("lobby;user_inited")
+            init_panel = self.receive_data("lobby;init_panel;")
+            current_user_info = json.loads(init_panel.split(';')[2])
             print("Successfully logged in!")
-            return True
+            return current_user_info
         except:
             print("Invalid credentials!")
-            return False
     
     def get_user_info(self, nickname):
         self.send_data(f"lobby;get_user_info;{nickname}")
@@ -114,8 +115,8 @@ class ProxyClient:
         self.send_data(f"garage;try_buy_item;{item_id};{count}")
 
     def change_password(self, old_password, new_password):
+        self.send_data(f"lobby;change_password;{old_password};{new_password}")
         try:
-            self.send_data(f"lobby;change_password;{old_password};{new_password}")
             self.receive_data("lobby;server_message;")
             return True
         except:
@@ -127,8 +128,5 @@ class ProxyClient:
     def disconnect(self):
         self.__s.close()
         self.__disconnecting = True
-
-        
-        
 
 

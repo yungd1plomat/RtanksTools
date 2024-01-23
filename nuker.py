@@ -2,9 +2,12 @@
 import random
 import utils
 import sys
+import time
 
 destination_ip = "135.125.188.169"
 destination_port = 6969
+delay_min = 3
+delay_max = 15
 
 def buy_rnd_item(client, crystalls, min_crystalls, item_name, item_price):
     if crystalls > min_crystalls:
@@ -48,7 +51,7 @@ if __name__ == '__main__':
         try:
             try:
                 client.handshake()
-            except:
+            except Exception:
                 print("IP BANNED!")
                 break
             current_user = client.auth(login, password)
@@ -71,4 +74,7 @@ if __name__ == '__main__':
         remain.remove(account)
         utils.write_lines("data/remain.txt", remain)
         client.disconnect()
+        random_delay = random.randint(delay_min, delay_max)
+        time.sleep(random_delay)
+        print(f"Sleeping {random_delay} seconds..")
     input("Press enter to exit..")

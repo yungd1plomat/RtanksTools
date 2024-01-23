@@ -45,7 +45,6 @@ class ProxyClient:
     def receive_data(self, packet_name = None, timeout = 10):
         packet = self.__packets_queue.get(timeout=timeout)
         if not packet_name or packet.startswith(packet_name):
-            print(packet[:50])
             return packet
         return self.receive_data(packet_name, timeout)
         

@@ -6,8 +6,8 @@ import time
 
 destination_ip = "135.125.188.169"
 destination_port = 6969
-delay_min = 3
-delay_max = 15
+delay_min = 10
+delay_max = 30
 
 def buy_rnd_item(client, crystalls, min_crystalls, item_name, item_price):
     if crystalls > min_crystalls:
@@ -75,6 +75,6 @@ if __name__ == '__main__':
         utils.write_lines("data/remain.txt", remain)
         client.disconnect()
         random_delay = random.randint(delay_min, delay_max)
-        time.sleep(random_delay)
         print(f"Sleeping {random_delay} seconds..")
+        time.sleep(random_delay)
     input("Press enter to exit..")

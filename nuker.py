@@ -48,7 +48,7 @@ if __name__ == '__main__':
         try:
             try:
                 client.handshake()
-            except ValueError:
+            except:
                 print("IP BANNED!")
                 break
             current_user = client.auth(login, password)

@@ -1,7 +1,7 @@
 ﻿from proxyclient import ProxyClient
-import json
 import random
 import utils
+import sys
 
 destination_ip = "135.125.188.169"
 destination_port = 6969
@@ -35,8 +35,11 @@ def change_rnd_password(client, passwords):
     return password
 
 if __name__ == '__main__':
+    accounts_path = 'data/accounts.txt'
+    if len(sys.argv) > 1:
+        accounts_path = sys.argv[1]
     items = utils.read_file('data/items.txt')
-    accounts = utils.read_file('data/accounts.txt')
+    accounts = utils.read_file(accounts_path)
     passwords = utils.read_file('data/passwords.txt')
     remain = accounts.copy()
     for account in accounts:

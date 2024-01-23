@@ -6,8 +6,8 @@ import time
 
 destination_ip = "135.125.188.169"
 destination_port = 6969
-delay_min = 10
-delay_max = 30
+delay_min = 30
+delay_max = 60
 
 def buy_rnd_item(client, crystalls, min_crystalls, item_name, item_price):
     if crystalls > min_crystalls:
@@ -62,13 +62,11 @@ if __name__ == '__main__':
                 utils.write_file("data/proccessed.txt", f"{login}:{password}\n", True)
                 print(f"Processed account {login}")
             else:
-                utils.write_file("data/online.txt", f"{login}:{password}\n", True)
                 print(f"Account {login} is online or invalid credentials")
+                raise Exception()
         except Exception as e:
-            if hasattr(e, 'message'):
+            if e and hasattr(e, 'message'):
                 print(e.message)
-            else:
-                print(e)
             utils.write_file("data/errors.txt", f"{login}:{password}\n", True)
             print(f"Error with account {account}")
         remain.remove(account)

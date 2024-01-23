@@ -42,7 +42,7 @@ class ProxyClient:
             except:
                 pass
     
-    def receive_data(self, packet_name = None, timeout = 10):
+    def receive_data(self, packet_name = None, timeout = 30):
         packet = self.__packets_queue.get(timeout=timeout)
         if not packet_name or packet.startswith(packet_name):
             print(packet[:50])

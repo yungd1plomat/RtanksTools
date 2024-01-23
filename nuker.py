@@ -61,7 +61,11 @@ if __name__ == '__main__':
             else:
                 utils.write_file("data/online.txt", f"{login}:{password}\n", True)
                 print(f"Account {login} is online or invalid credentials")
-        except:
+        except Exception as e:
+            if hasattr(e, 'message'):
+                print(e.message)
+            else:
+                print(e)
             utils.write_file("data/errors.txt", f"{login}:{password}\n", True)
             print(f"Error with account {account}")
         remain.remove(account)

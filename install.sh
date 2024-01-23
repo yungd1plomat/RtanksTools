@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo apt update
-sudo apt install python3-pip -y
+sudo NEEDRESTART_MODE=a apt update
+sudo NEEDRESTART_MODE=a apt install python3-pip -y
 pip install PySocks
 cd data
 sudo nano accounts.txt

@@ -1,5 +1,5 @@
 import hashlib
-
+import logging
 
 class AesEncryption:
 
@@ -33,7 +33,7 @@ class AesEncryption:
             self.private_key = 32
         else:
             raise ValueError("Failed to parse private key:", md5_hash)
-        print("Parsed private key:", self.private_key)
+        logging.debug(f"Parsed private key: {self.private_key}")
 
     def encrypt(self, data):
         key = (self.last_key + 1) % 9

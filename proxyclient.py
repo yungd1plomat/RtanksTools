@@ -4,6 +4,7 @@ from queue import Queue
 import socket
 from threading import Thread
 import json
+import logging
 
 class ProxyClient:
 
@@ -42,10 +43,9 @@ class ProxyClient:
             except:
                 pass
     
-    def receive_data(self, packet_name = None, timeout = 30):
+    def receive_data(self, packet_name = None, timeout = 20):
         packet = self.__packets_queue.get(timeout=timeout)
         if not packet_name or packet.startswith(packet_name):
-            print(packet[:50])
             return packet
         return self.receive_data(packet_name, timeout)
         
@@ -60,16 +60,16 @@ class ProxyClient:
             self.__s.connect((self.dest_ip, self.dest_port))
             self.send_data("system;get_aes_data;RU")
             data = self.receive_data("system;set_aes_data;")
-            print("Connected to", self.dest_ip, self.dest_port)
+            logging.debug(f"Connected to {self.dest_ip}:{self.dest_port}")
             aes_data = data.split(';')[-1]
             self.__crypt_manager.parse_key(aes_data)
-            print("Succesfully handshaked!")
+            logging.debug("Succesfully handshaked!")
         except:
             self.disconnect()
             raise Exception("Can't connect to server")
 
     def auth(self, login, password):
-        print("Authorization..")
+        logging.debug("Authorization..")
         self.send_data("auth;state")
         self.send_data(f"auth;{login};{password};false;")
         try:
@@ -77,10 +77,10 @@ class ProxyClient:
             self.send_data("lobby;user_inited")
             init_panel = self.receive_data("lobby;init_panel;")
             current_user_info = json.loads(init_panel.split(';')[2])
-            print("Successfully logged in!")
+            logging.debug("Successfully logged in!")
             return current_user_info
         except:
-            print("Invalid credentials!")
+            logging.error("Invalid credentials!")
     
     def get_user_info(self, nickname):
         self.send_data(f"lobby;get_user_info;{nickname}")
@@ -89,7 +89,7 @@ class ProxyClient:
             user_info = data.split(';')[2]
             return json.loads(user_info)
         except:
-            print("Can't get user data")
+            logging.error("Can't get user data")
 
     def get_battles(self):
         self.send_data("lobby;get_data_init_battle_select")
@@ -98,7 +98,7 @@ class ProxyClient:
             battles = data.split(';')[2]
             return json.loads(battles)
         except:
-            print("Can't get battles")
+            logging.error("Can't get battles")
     
     def enter_battle(self, battle_id):
         self.send_data("battle;i_exit_from_battle")

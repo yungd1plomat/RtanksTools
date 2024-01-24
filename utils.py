@@ -1,3 +1,5 @@
+import string
+import secrets
 
 def get_battle_max(user_info, battles_data):
     current_rank = user_info["rank"]
@@ -39,3 +41,7 @@ def write_file(filename, content, append = False):
     mode = 'a' if append else 'w'
     with open(filename, mode) as file:
         file.write(content)
+
+def random_string(size):        
+    letters = string.ascii_lowercase + string.ascii_uppercase + string.digits            
+    return ''.join(secrets.choice(letters) for i in range(size))

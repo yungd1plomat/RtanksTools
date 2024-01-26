@@ -73,14 +73,23 @@ class ProxyClient:
         self.send_data("auth;state")
         self.send_data(f"auth;{login};{password};false;")
         try:
-            self.receive_data("auth;accept")
-            self.send_data("lobby;user_inited")
-            init_panel = self.receive_data("lobby;init_panel;")
-            current_user_info = json.loads(init_panel.split(';')[2])
-            logging.debug("Successfully logged in!")
-            return current_user_info
+            while True:
+                packet = self.receive_data()
+                if packet.startswith("auth;denied"):
+                    logging.debug("Invalid credentials!")
+                    return False
+                elif packet.startswith("auth;ban"):
+                    logging.debug("Account banned!")
+                    return False
+                elif packet.startswith("auth;accept"):
+                    logging.debug("Requesting user info..")
+                    self.send_data("lobby;user_inited")
+                elif packet.startswith("lobby;init_panel"):
+                    current_user_info = json.loads(packet.split(';')[2])
+                    logging.debug("Successfully logged in!")
+                    return current_user_info
         except:
-            logging.error("Invalid credentials!")
+            logging.debug("Account online!")
     
     def get_user_info(self, nickname):
         self.send_data(f"lobby;get_user_info;{nickname}")
@@ -89,7 +98,7 @@ class ProxyClient:
             user_info = data.split(';')[2]
             return json.loads(user_info)
         except:
-            logging.error("Can't get user data")
+            logging.debug("Can't get user data")
 
     def get_battles(self):
         self.send_data("lobby;get_data_init_battle_select")
@@ -98,7 +107,7 @@ class ProxyClient:
             battles = data.split(';')[2]
             return json.loads(battles)
         except:
-            logging.error("Can't get battles")
+            logging.debug("Can't get battles")
     
     def enter_battle(self, battle_id):
         self.send_data("battle;i_exit_from_battle")

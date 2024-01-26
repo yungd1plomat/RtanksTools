@@ -90,9 +90,12 @@ def change_rnd_password(client):
 
 if __name__ == '__main__':
     data_path = os.path.join(os.getcwd(), "data")
+    accounts_file = "accounts.txt"
     if len(sys.argv) > 1:
         data_path = sys.argv[1]
-    accounts_path = os.path.join(data_path, "accounts.txt")
+    if len(sys.argv) > 2:
+        accounts_file = sys.argv[2]
+    accounts_path = os.path.join(data_path, accounts_file)
     processed_path = os.path.join(data_path, "proccessed.txt")
     errors_path = os.path.join(data_path, "errors.txt")
     remain_path = os.path.join(data_path, "remain.txt")

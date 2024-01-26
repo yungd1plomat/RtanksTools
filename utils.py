@@ -28,18 +28,18 @@ def battles_to_count(user_info, battles_data):
         battles.append(battle_count)
 
 def read_file(filename):
-    with open(filename) as file:
+    with open(filename, encoding='utf-8') as file:
         lines = [line.rstrip('\n') for line in file]
         return lines
     
 def write_lines(filename, lines):
-    with open(filename, 'w') as file:
+    with open(filename, 'w', encoding='utf-8') as file:
         for line in lines:
             file.write(f"{line}\n")
 
 def write_file(filename, content, append = False):
     mode = 'a' if append else 'w'
-    with open(filename, mode) as file:
+    with open(filename, mode, encoding='utf-8') as file:
         file.write(content)
 
 def random_string(size):        

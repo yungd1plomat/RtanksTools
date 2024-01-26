@@ -24,6 +24,41 @@ exact_items = [
     [150, "health_m0", 150]
 ]
 
+# info
+rangs = {
+    1: "Новобранец",
+    2: "Рядовой",
+    3: "Ефрейтор",
+    4: "Капрал",
+    5: "Мастер-капрал",
+    6: "Сержант",
+    7: "Штаб-сержант",
+    8: "Мастер-сержант",
+    9: "Первыйсержант",
+    10: "Сержант-майор",
+    11: "Уорэнт-офицер 1",
+    12: "Уорэнт-офицер 2",
+    13: "Уорэнт-офицер 3",
+    14: "Уорэнт-офицер 4",
+    15: "Уорэнт-офицер 5",
+    16: "Младшийлейтенант",
+    17: "Лейтенант",
+    18: "Старшийлейтенант",
+    19: "Капитан",
+    20: "Майор",
+    21: "Подполковник",
+    22: "Полковник",
+    23: "Бригадир",
+    24: "Генерал-майор",
+    25: "Генерал-лейтенант",
+    26: "Генерал",
+    27: "Маршал",
+    28: "Фельдмаршал",
+    29: "Командор",
+    30: "Генералиссимус",
+    31: "Легенда"
+}
+
 def buy_rnd_item(client, crystalls, min_crystalls, item_name, item_price):
     if crystalls > min_crystalls:
         max_count = crystalls // item_price
@@ -76,10 +111,12 @@ if __name__ == '__main__':
             if not current_user:
                 raise Exception(f"Account {login} is online or invalid credentials")
             crystalls = current_user['crystall']
+            current_rang_id = current_user['rang']
+            current_rang = rangs[current_rang_id]
             buy_rnd_items(client, crystalls)
             password = change_rnd_password(client)
-            utils.write_file(processed_path, f"{login}:{password}\n", True)
-            logging.info(f"Processed account {login}")  
+            utils.write_file(processed_path, f"{login}:{password}|{current_rang}\n", True)
+            logging.info(f"Processed account {login} with the rang of {current_rang}")  
         except Exception as e:
             if hasattr(e, 'message'):
                 logging.error(e.message)

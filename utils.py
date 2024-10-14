@@ -42,6 +42,11 @@ def write_file(filename, content, append = False):
     with open(filename, mode, encoding='utf-8') as file:
         file.write(content)
 
+def get_item_by_id(data, name):
+    for item in data["items"]:
+        if item["id"] == name:
+            return item
+        
 def random_string(size):        
     letters = string.ascii_lowercase + string.ascii_uppercase + string.digits            
     return ''.join(secrets.choice(letters) for i in range(size))
